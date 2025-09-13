@@ -1,87 +1,188 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { CartContext } from "../contexts/CartContext";
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   const getTotal = () =>
     cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
+  const handleCheckout = () => {
+    setIsCheckoutLoading(true);
+    // Simulate checkout process
+    setTimeout(() => {
+      alert("Checkout completed successfully!");
+      setIsCheckoutLoading(false);
+    }, 1500);
+  };
+
+  const handleQuantityChange = (name, newQuantity) => {
+    if (newQuantity < 1) {
+      removeFromCart(name);
+    } else {
+      updateQuantity(name, newQuantity);
+    }
+  };
+
+  // Calculate shipping (free over $50)
+  const subtotal = parseFloat(getTotal());
+  const shippingCost = subtotal > 50 ? 0 : 5;
+
   return (
     <section className="container py-5 min-vh-100">
-      <h1 className="fw-bold mb-4 text-center">Shopping Cart</h1>
+      <h1 className="fw-bold mb-4 text-center text-primary">Your Cart</h1>
+      
       {cart.length === 0 ? (
-        <p className="text-center">Your cart is empty.</p>
+        <div className="text-center py-5">
+          <div className="mb-4">
+            <i className="bi bi-cart-x display-1 text-muted"></i>
+          </div>
+          <p className="fs-5 text-muted">Your cart is empty.</p>
+          <button className="btn btn-primary mt-3 rounded-pill px-4" to="/products">
+            Continue Shopping
+          </button>
+        </div>
       ) : (
         <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <div className="table-responsive">
-              <table className="table align-middle bg-white shadow-sm">
-                <thead className="table-light">
-                  <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Total</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cart.map((item) => (
-                    <tr key={item.name}>
-                      <td>
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          style={{ width: "60px", height: "60px", objectFit: "cover" }}
-                          className="rounded"
-                        />
-                      </td>
-                      <td>{item.name}</td>
-                      <td>${item.price.toFixed(2)}</td>
-                      <td>
-                        <input
-                          type="number"
-                          min="1"
-                          value={item.quantity}
-                          className="form-control form-control-sm w-50 mx-auto"
-                          onChange={(e) => updateQuantity(item.name, parseInt(e.target.value))}
-                        />
-                      </td>
-                      <td>${(item.price * item.quantity).toFixed(2)}</td>
-                      <td>
-                        <button
-                          className="btn btn-sm btn-outline-danger"
-                          onClick={() => removeFromCart(item.name)}
-                        >
-                          Remove
-                        </button>
-                      </td>
+          <div className="col-lg-9">
+            <div className=" shadow-sm border-0 overflow-hidden">
+              <div className="table-responsive">
+                <table className="table align-middle mb-0">
+                  <thead className="table-light">
+                    <tr>
+                      <th scope="col" className="ps-4">Product</th>
+                      <th scope="col">Details</th>
+                      <th scope="col" className="text-center">Price</th>
+                      <th scope="col" className="text-center">Quantity</th>
+                      <th scope="col" className="text-center">Total</th>
+                      <th scope="col" className="text-end pe-4">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="d-flex justify-content-end mt-4">
-              <div className="card p-3 shadow-sm" style={{ minWidth: "250px" }}>
-                <h5 className="fw-bold mb-3">Cart Summary</h5>
-                <div className="d-flex justify-content-between mb-2">
-                  <span>Subtotal:</span>
-                  <span>${getTotal()}</span>
+                  </thead>
+                  <tbody>
+                    {cart.map((item) => (
+                      <tr key={item.name} className="border-top">
+                        <td className="ps-4">
+                          <div className="d-flex align-items-center">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              style={{ width: "80px", height: "80px", objectFit: "cover" }}
+                              className="rounded shadow-sm"
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          <h6 className="mb-1 fw-semibold">{item.name}</h6>
+                          {/* <small className="text-muted">SKU: {item.sku || "N/A"}</small> */}
+                        </td>
+                        <td className="text-center">
+                          <span className="fw-semibold">${item.price.toFixed(2)}</span>
+                        </td>
+                        <td className="text-center">
+                          <div className="d-flex justify-content-center">
+                            <div className="input-group input-group-sm" style={{ width: "120px" }}>
+                              <button 
+                                className="btn btn-outline-secondary"
+                                onClick={() => handleQuantityChange(item.name, item.quantity - 1)}
+                              >
+                                -
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                value={item.quantity}
+                                className="form-control text-center"
+                                onChange={(e) => handleQuantityChange(item.name, parseInt(e.target.value))}
+                              />
+                              <button 
+                                className="btn btn-outline-secondary"
+                                onClick={() => handleQuantityChange(item.name, item.quantity + 1)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <span className="fw-bold text-primary">
+                            ${(item.price * item.quantity).toFixed(2)}
+                          </span>
+                        </td>
+                        <td className="text-end pe-4">
+                          <button
+                            className="btn btn-sm btn-outline-danger rounded-circle"
+                            onClick={() => removeFromCart(item.name)}
+                            title="Remove item"
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              <div className="row justify-content-end p-4">
+                <div className="col-md-6 col-lg-5">
+                  <div className="card border-0 shadow-sm">
+                    <div className="card-body">
+                      <h5 className="card-title fw-bold border-bottom pb-3">Cart Summary</h5>
+                      
+                      <div className="d-flex justify-content-between py-2">
+                        <span>Subtotal:</span>
+                        <span>${getTotal()}</span>
+                      </div>
+                      
+                      <div className="d-flex justify-content-between py-2">
+                        <span>
+                          Shipping:
+                          {shippingCost === 0 && (
+                            <span className="text-success ms-1">(Free shipping!)</span>
+                          )}
+                        </span>
+                        <span>{shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}</span>
+                      </div>
+                      
+                      {subtotal < 50 && (
+                        <div className="alert alert-info py-2 small">
+                          <i className="bi bi-info-circle me-1"></i>
+                          Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+                        </div>
+                      )}
+                      
+                      <div className="d-flex justify-content-between py-2 border-top mt-2">
+                        <strong>Total:</strong>
+                        <strong className="text-primary">
+                          ${(subtotal + shippingCost).toFixed(2)}
+                        </strong>
+                      </div>
+                      
+                      <button 
+                        className="btn btn-primary w-100 mt-3 rounded-pill py-2 fw-semibold"
+                        onClick={handleCheckout}
+                        disabled={isCheckoutLoading}
+                      >
+                        {isCheckoutLoading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2" />
+                            Processing...
+                          </>
+                        ) : (
+                          "Proceed to Checkout"
+                        )}
+                      </button>
+                      
+                      <div className="text-center mt-3">
+                        <a href="#" className="text-decoration-none">
+                          <i className="bi bi-arrow-left me-1"></i>
+                          Continue Shopping
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex justify-content-between mb-2">
-                  <span>Shipping:</span>
-                  <span>$5.00</span>
-                </div>
-                <hr />
-                <div className="d-flex justify-content-between fw-bold">
-                  <span>Total:</span>
-                  <span>${(parseFloat(getTotal()) + 5).toFixed(2)}</span>
-                </div>
-                <button className="btn btn-danger w-100 mt-3 rounded-pill">
-                  Checkout
-                </button>
               </div>
             </div>
           </div>
