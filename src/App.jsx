@@ -2,23 +2,32 @@ import React from 'react'
 import { useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
-import Herosection from './components/Herosection'
-import Cardsection from './components/Cardsection'
-import Product from './components/Product'
-import Exclusive from './components/Exclusive'
-import Testimonial from './components/Testimonial'
-import Footer from './components/Footer'
+import { Route } from 'react-router-dom'
+import { Routes } from 'react-router-dom'
+import About from './pages/About'
+import Notfound from './pages/Notfound'
+import Home from './pages/Home'
+import Products from './pages/Products'
+import Contact from './pages/Contact'
+import Account from './pages/Account'
+import Cart from './pages/Cart'
 
 const App = () => {
   return (
     <>
+    
       <Navbar />
-      <Herosection />
-      <Cardsection />
-      <Product />
-      <Exclusive />
-      <Testimonial />
-      <Footer />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<Notfound />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/cart" element={<Cart />} />
+        
+      </Routes>
+    
     </>
   )
 }
