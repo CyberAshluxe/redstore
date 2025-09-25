@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 const Account = () => {
   const [user, setUser] = useState({
-    name: "John Doe",
-    email: "johndoe@example.com",
+    name: "Ash Luxe",
+    email: "ashluxe124@gmail.com",
     avatar: "https://i.pravatar.cc/100", // random avatar
   });
 

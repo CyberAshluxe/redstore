@@ -6,13 +6,22 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom';
 import { CartProvider } from './contexts/CartContext';
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
+import counterReducer  from './redux/counterSlice.js'
+
+let store = configureStore({
+  reducer: { counterReducer }
+})
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <CartProvider>
-      <BrowserRouter>
+    <Provider store={store}>
+      <CartProvider>
+        <BrowserRouter>
         <App />
       </BrowserRouter>
     </CartProvider>
+     </Provider>
   </StrictMode>,
 )
