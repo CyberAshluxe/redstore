@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -113,7 +114,9 @@ const Signin = () => {
           </div>
         </div>
       )}
+      <Footer />
     </div>
+    
   );
 };
 
