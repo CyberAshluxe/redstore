@@ -34,7 +34,7 @@ const Signup = () => {
     <div className="signup-container">
       <div className="form-box">
         <form className="form" onSubmit={addUser}>
-          <span className="title">Sign up</span>
+          <span className="title">Join Us</span>
           <span className="subtitle">Create a free account with your email.</span>
 
           {error && <div className="alert error">{error}</div>}

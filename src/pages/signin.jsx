@@ -46,19 +46,14 @@ const Signin = () => {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center vh-100"
-      style={{
-        background: "transparent",
-      }}
-    >
-      <div className="card p-4 shadow-lg border-0" style={{ width: "350px" }}>
-        <h2 className="text-center mb-4">Sign In</h2>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2 className="auth-title">Welcome Back</h2>
 
-        {error && <p className="text-danger text-center">{error}</p>}
+        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={loginUser}>
-          <div className="mb-3">
+          <div className="form-group">
             <input
               type="email"
               placeholder="Enter your email"
@@ -66,10 +61,10 @@ const Signin = () => {
               onChange={(e) => setEmail(e.target.value)}
               name="email"
               required
-              className="form-control"
+              className="form-input"
             />
           </div>
-          <div className="mb-3">
+          <div className="form-group">
             <input
               type="password"
               placeholder="Enter your password"
@@ -77,13 +72,13 @@ const Signin = () => {
               onChange={(e) => setPassword(e.target.value)}
               name="password"
               required
-              className="form-control"
+              className="form-input"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary w-100"
+            className="auth-btn"
           >
             {loading ? (
               <span
@@ -95,28 +90,27 @@ const Signin = () => {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <div className="form-section">
+          <p>
+            Don't have an account?{" "}
+            <a href="/signup" className="link">
+              Sign up
+            </a>
+          </p>
+        </div>
       </div>
 
-      {/* ✅ Force modal to show */}
+      {/* Success Modal */}
       {showModal && (
-        <div
-          className="modal fade show"
-          style={{
-            display: "block",
-            background: "rgba(0,0,0,0.6)",
-          }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content text-center p-4">
-              <h4 className="text-success">✅ Login Successful</h4>
-              <p>Redirecting to dashboard...</p>
-            </div>
+        <div className="auth-modal">
+          <div className="modal-content">
+            <h4>✅ Login Successful</h4>
+            <p>Redirecting to dashboard...</p>
           </div>
         </div>
       )}
-      <Footer />
     </div>
-    
   );
 };
 
